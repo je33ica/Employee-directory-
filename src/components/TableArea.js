@@ -1,13 +1,28 @@
 import React, { Component } from "react";
 import API from "../utils/API";
+import TableRow from "./TableRow";
 
 const TableArea = ({ employees }) => {
   return (
     <div>
       {employees.length > 0 ? (
-        <p>
-          {employees[0].name.first} {employees[0].name.last}
-        </p>
+        <table className="striped bordered hover">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Age</th>
+              <th>City</th>
+              <th>Country</th>
+            </tr>
+          </thead>
+          <tbody>
+            {employees.map((employee, index) => {
+              return <TableRow employee={employee} key={index} index={index} />;
+            })}
+          </tbody>
+        </table>
       ) : (
         <p>Loading Data...</p>
       )}
