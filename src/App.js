@@ -1,11 +1,10 @@
 import React from "react";
-import Header from "./components/Header";
+import Directory from "../src/pages/Directory";
 
 function App() {
   return (
     <div className="App">
-      <Header />
-      <Main />
+      <Directory></Directory>
     </div>
   );
 }
