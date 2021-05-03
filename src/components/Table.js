@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import icons from "../icons/icons";
@@ -67,33 +67,57 @@ const Table = () => {
     });
     setEmployeeData([...sortArr]);
   };
+
   const handleInputChange = ({ target }) => {
+    console.log(searchFilterRef.current.value, "im the ref");
     const searched = target.value;
     setSearch(searched);
     // if (searched.length === 0) {
     //   return displayedEmployess();
     // }
 
-    const filterResult = employeeData.filter((employee) => {
-      return employee.name.first
-        .toLowerCase()
-        .indexOf(searched.toLowerCase()) !== -1
-        ? true
-        : false;
-    });
+    let filterResult = [];
+    if (searchFilterRef.current.value !== "name") {
+      //filter by location
+      filterResult = employeeData.filter((employee) => {
+        return (
+          employee.location[searchFilterRef.current.value]
+            .toLowerCase()
+            .indexOf(searched.toLowerCase()) !== -1
+        );
+      });
+    } else {
+      filterResult = employeeData.filter((employee) => {
+        return employee.name.first
+          .toLowerCase()
+          .indexOf(searched.toLowerCase()) !== -1
+          ? true
+          : false;
+      });
+    }
     console.log("im the filter", filterResult);
     setEmployeeData([...filterResult]);
   };
+
   const clearSearch = () => {
     setSearch("");
     setEmployeeData([...displayedEmployess]);
   };
+
+  const searchFilterRef = useRef("");
 
   return (
     <>
       <div>
         <h1>Search Employee</h1>
       </div>
+      <select ref={searchFilterRef} id="searchFilter">
+        {/* setting default value as name so somethign is always selected when func runs */}
+        <option value="name">--Please choose an option--</option>
+        <option value="name">Name</option>
+        <option value="city">City</option>
+        <option value="country">Country</option>
+      </select>
       <input type="text" value={search} onChange={handleInputChange} />
       <button onClick={() => clearSearch()}>clear Search</button>
       <table>
