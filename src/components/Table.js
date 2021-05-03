@@ -1,57 +1,188 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import API from "../utils/API";
-// const { getEmployees } = API;
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import icons from "../icons/icons";
 
 const Table = () => {
   const [employeeData, setEmployeeData] = useState([]);
+  const [sortedField, setSortedField] = useState([]);
+  const [search, setSearch] = useState("");
+  const [displayedEmployess, setDisplayedEmployess] = useState([]);
 
   useEffect(() => {
     axios
       .get("https://randomuser.me/api/?results=100")
 
       .then((res) => {
-        const employeeData = res.data.results;
-        setEmployeeData(employeeData);
-        console.log("im the employees", employeeData);
+        setEmployeeData(res.data.results);
+        setDisplayedEmployess(res.data.results);
+        setSortedField(res.data.results);
+        // setDisplayedEmployess(res.data.results)
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
 
-  return (
-    <table>
-      <thead>
-        <th>NAME</th>
-        <th>PICTURE</th>
-        <th>EMAIL</th>
-        <th>lOCATION</th>
-        <th>AGE</th>
-      </thead>
+  const sortAscending = () => {
+    let sortArr = [...sortedField];
+    sortArr.sort(function (a, b) {
+      if (a.dob.age < b.dob.age) {
+        return -1;
+      }
+      return 0;
+    });
 
-      <tbody>
-        {employeeData.map(({ id, name, picture, email, location, dob }) => {
-          return (
-            <tr key={id}>
-              <td>
-                {name.first} &nbsp;
-                {name.last}
-              </td>
-              <td>
-                <img src={picture.thumbnail} />
-              </td>
-              <td>{email}</td>
-              <td>
-                {location.city}, {location.country}
-              </td>
-              <td>{dob.age}</td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+    setEmployeeData([...sortArr]);
+  };
+  const sortDescending = () => {
+    let sortArr = [...sortedField];
+    sortArr.sort(function (a, b) {
+      if (a.dob.age > b.dob.age) {
+        return -1;
+      }
+      return 0;
+    });
+    setEmployeeData([...sortArr]);
+  };
+
+  const sortNameUp = () => {
+    let sortArr = [...sortedField];
+    sortArr.sort(function (a, b) {
+      if (a.name.first > b.name.first) {
+        return -1;
+      }
+      return 0;
+    });
+    setEmployeeData([...sortArr]);
+  };
+
+  const sortNameDown = () => {
+    let sortArr = [...sortedField];
+    sortArr.sort(function (a, b) {
+      if (a.name.first < b.name.first) {
+        return -1;
+      }
+      return 0;
+    });
+    setEmployeeData([...sortArr]);
+  };
+  const handleInputChange = ({ target }) => {
+    const searched = target.value;
+    setSearch(searched);
+    // if (searched.length === 0) {
+    //   return displayedEmployess();
+    // }
+
+    const filterResult = employeeData.filter((employee) => {
+      return employee.name.first
+        .toLowerCase()
+        .indexOf(searched.toLowerCase()) !== -1
+        ? true
+        : false;
+    });
+    console.log("im the filter", filterResult);
+    setEmployeeData([...filterResult]);
+  };
+  const clearSearch = () => {
+    setSearch("");
+    setEmployeeData([...displayedEmployess]);
+  };
+
+  return (
+    <>
+      <div>
+        <h1>Search Employee</h1>
+      </div>
+      <input type="text" value={search} onChange={handleInputChange} />
+      <button onClick={() => clearSearch()}>clear Search</button>
+      <table>
+        <thead>
+          <tr>
+            <th>
+              NAME
+              <tr>
+                sort by first name
+                <button className="ascending" onClick={() => sortNameUp()}>
+                  <FontAwesomeIcon icon={icons.upArr} />
+                </button>
+                <button className="descending" onClick={() => sortNameDown()}>
+                  <FontAwesomeIcon icon={icons.downArr} />
+                </button>
+              </tr>
+              {/* <tr>
+                sort by second name
+                <button className="ascending" onClick={() => sortNameUp2()}>
+                  <FontAwesomeIcon icon={icons.upArr} />
+                </button>
+                <button className="descending" onClick={() => sortNameDown2()}>
+                  <FontAwesomeIcon icon={icons.downArr} />
+                </button>
+              </tr> */}
+            </th>
+            <th>PICTURE</th>
+            <th>EMAIL</th>
+            <th>LOCATION</th>
+            <th>
+              AGE
+              <tr>
+                sort by age
+                <button className="ascending" onClick={() => sortAscending()}>
+                  <FontAwesomeIcon icon={icons.upArr} />
+                </button>
+                <button className="descending" onClick={() => sortDescending()}>
+                  <FontAwesomeIcon icon={icons.downArr} />
+                </button>
+              </tr>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {employeeData.map(
+            ({ login, name, picture, email, location, dob }) => {
+              return (
+                <tr key={login.uuid}>
+                  <td>
+                    {name.first} &nbsp;
+                    {name.last}
+                  </td>
+                  <td>
+                    <img alt="User-Profile" src={picture.thumbnail} />
+                  </td>
+                  <td>{email}</td>
+                  <td>
+                    {location.city}, {location.country}
+                  </td>
+                  <td>{dob.age}</td>
+                </tr>
+              );
+            }
+          )}
+        </tbody>
+      </table>
+    </>
   );
 };
 
 export default Table;
+
+//if (sortNameUp = () => {
+//     let sortArr = [...sortedField];
+//     sortArr.sort(function (a, b) {
+//       if (a.name.first > b.name.first) {
+//         return -1;
+//       }
+//       return 0;
+//     });
+//     setEmployeeData([...sortArr]);
+//   };
+//   const sortNameDown = () => {
+//     let sortArr = [...sortedField];
+//     sortArr.sort(function (a, b) {
+//       if (a.name.first < b.name.first) {
+//         return -1;
+//       }
+//       return 0;
+//     });
+//     setEmployeeData([...sortArr]);
+//   };
