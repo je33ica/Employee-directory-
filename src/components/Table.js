@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import icons from "../icons/icons";
+import Row from "./Row";
 
 const Table = () => {
   const [employeeData, setEmployeeData] = useState([]);
@@ -69,18 +70,15 @@ const Table = () => {
   };
 
   const handleInputChange = ({ target }) => {
-    console.log(searchFilterRef.current.value, "im the ref");
     const searched = target.value;
     setSearch(searched);
-    // if (searched.length === 0) {
-    //   return displayedEmployess();
-    // }
 
     let filterResult = [];
     if (searchFilterRef.current.value !== "name") {
       //filter by location
       filterResult = employeeData.filter((employee) => {
         return (
+          //use bracket notation to set the dynamic property value on the object
           employee.location[searchFilterRef.current.value]
             .toLowerCase()
             .indexOf(searched.toLowerCase()) !== -1
@@ -95,7 +93,6 @@ const Table = () => {
           : false;
       });
     }
-    console.log("im the filter", filterResult);
     setEmployeeData([...filterResult]);
   };
 
@@ -120,10 +117,10 @@ const Table = () => {
       </select>
       <input type="text" value={search} onChange={handleInputChange} />
       <button onClick={() => clearSearch()}>clear Search</button>
-      <table>
+      <table style={{ tableLayout: "auto", width: "100%" }}>
         <thead>
           <tr>
-            <th>
+            <th scope="col">
               NAME
               <tr>
                 sort by first name
@@ -134,20 +131,11 @@ const Table = () => {
                   <FontAwesomeIcon icon={icons.downArr} />
                 </button>
               </tr>
-              {/* <tr>
-                sort by second name
-                <button className="ascending" onClick={() => sortNameUp2()}>
-                  <FontAwesomeIcon icon={icons.upArr} />
-                </button>
-                <button className="descending" onClick={() => sortNameDown2()}>
-                  <FontAwesomeIcon icon={icons.downArr} />
-                </button>
-              </tr> */}
             </th>
-            <th>PICTURE</th>
-            <th>EMAIL</th>
-            <th>LOCATION</th>
-            <th>
+            <th scope="col">PICTURE</th>
+            <th scope="col">EMAIL</th>
+            <th scope="col">LOCATION</th>
+            <th scope="col">
               AGE
               <tr>
                 sort by age
@@ -162,26 +150,9 @@ const Table = () => {
           </tr>
         </thead>
         <tbody>
-          {employeeData.map(
-            ({ login, name, picture, email, location, dob }) => {
-              return (
-                <tr key={login.uuid}>
-                  <td>
-                    {name.first} &nbsp;
-                    {name.last}
-                  </td>
-                  <td>
-                    <img alt="User-Profile" src={picture.thumbnail} />
-                  </td>
-                  <td>{email}</td>
-                  <td>
-                    {location.city}, {location.country}
-                  </td>
-                  <td>{dob.age}</td>
-                </tr>
-              );
-            }
-          )}
+          {employeeData.map((employee) => (
+            <Row employee={employee} key={employee.login.uuid} />
+          ))}
         </tbody>
       </table>
     </>
@@ -189,24 +160,3 @@ const Table = () => {
 };
 
 export default Table;
-
-//if (sortNameUp = () => {
-//     let sortArr = [...sortedField];
-//     sortArr.sort(function (a, b) {
-//       if (a.name.first > b.name.first) {
-//         return -1;
-//       }
-//       return 0;
-//     });
-//     setEmployeeData([...sortArr]);
-//   };
-//   const sortNameDown = () => {
-//     let sortArr = [...sortedField];
-//     sortArr.sort(function (a, b) {
-//       if (a.name.first < b.name.first) {
-//         return -1;
-//       }
-//       return 0;
-//     });
-//     setEmployeeData([...sortArr]);
-//   };
