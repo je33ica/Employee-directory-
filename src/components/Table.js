@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import icons from "../icons/icons";
 import Row from "./Row";
 
+import "../index.css";
+
 const Table = () => {
   const [employeeData, setEmployeeData] = useState([]);
   const [sortedField, setSortedField] = useState([]);
@@ -106,50 +108,54 @@ const Table = () => {
   return (
     <>
       <div>
-        <h1>Search Employee</h1>
+        <h1>Employee Directory </h1>
       </div>
-      <select ref={searchFilterRef} id="searchFilter">
-        {/* setting default value as name so somethign is always selected when func runs */}
-        <option value="name">--Please choose an option--</option>
-        <option value="name">Name</option>
-        <option value="city">City</option>
-        <option value="country">Country</option>
-      </select>
-      <input type="text" value={search} onChange={handleInputChange} />
-      <button onClick={() => clearSearch()}>clear Search</button>
-      <table style={{ tableLayout: "auto", width: "100%" }}>
+      <div className="search">
+        <select ref={searchFilterRef} id="searchFilter">
+          {/* setting default value as name so somethign is always selected when func runs */}
+          <option value="name">--Please choose an option--</option>
+          <option value="name">Name</option>
+          <option value="city">City</option>
+          <option value="country">Country</option>
+        </select>
+
+        <input type="text" value={search} onChange={handleInputChange} />
+        <button onClick={() => clearSearch()}>Clear Search</button>
+      </div>
+      <table className="table">
         <thead>
-          <tr>
-            <th scope="col">
-              NAME
-              <tr>
-                sort by first name
-                <button className="ascending" onClick={() => sortNameUp()}>
-                  <FontAwesomeIcon icon={icons.upArr} />
-                </button>
-                <button className="descending" onClick={() => sortNameDown()}>
-                  <FontAwesomeIcon icon={icons.downArr} />
-                </button>
-              </tr>
-            </th>
-            <th scope="col">PICTURE</th>
-            <th scope="col">EMAIL</th>
-            <th scope="col">LOCATION</th>
-            <th scope="col">
-              AGE
-              <tr>
-                sort by age
-                <button className="ascending" onClick={() => sortAscending()}>
-                  <FontAwesomeIcon icon={icons.upArr} />
-                </button>
-                <button className="descending" onClick={() => sortDescending()}>
-                  <FontAwesomeIcon icon={icons.downArr} />
-                </button>
-              </tr>
-            </th>
-          </tr>
+          <th>NAME</th>
+          <th>PICTURE</th>
+          <th>EMAIL</th>
+          <th>LOCATION</th>
+          <th>AGE</th>
         </thead>
-        <tbody>
+
+        <tr>
+          <th>
+            Sort by first name
+            <button className="ascending" onClick={() => sortNameUp()}>
+              <FontAwesomeIcon icon={icons.upArr} />
+            </button>
+            <button className="descending" onClick={() => sortNameDown()}>
+              <FontAwesomeIcon icon={icons.downArr} />
+            </button>
+          </th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th>
+            Sort by age
+            <button className="ascending" onClick={() => sortAscending()}>
+              <FontAwesomeIcon icon={icons.upArr} />
+            </button>
+            <button className="descending" onClick={() => sortDescending()}>
+              <FontAwesomeIcon icon={icons.downArr} />
+            </button>
+          </th>
+        </tr>
+
+        <tbody className="tbody">
           {employeeData.map((employee) => (
             <Row employee={employee} key={employee.login.uuid} />
           ))}
