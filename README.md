@@ -20,7 +20,7 @@ The application uses state management to enable the user to sort and filter the 
 
 ## Deployment
 
-Dinoco Employee Tracker is available [here](hhttps://employee-directory-jess.netlify.app/).
+Employee Tracker is available [here](https://employee-directory-jess.netlify.app/).
 
 ![Screenshot](https://user-images.githubusercontent.com/67834752/117411405-6d688700-af0b-11eb-8120-9c80083bc588.png)
 
